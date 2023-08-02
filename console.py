@@ -113,15 +113,50 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
+    def try_convert(self, value):
+        """The helper function that converts parameters values
+        into int ou floats if possible"""
+        try:
+            return int(value)
+        except ValueError:
+            try:
+                return float(value)
+            except ValueError:
+                return value
+
     def do_create(self, args):
         """ Create an object of any class"""
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        """Split the argument string in a list"""
+        arguments = args.split()
+        class_name = arguments[0]
+
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+
+        """Create dictionary of formatted parameters"""
+        kwargs = {}
+        for arg in arguments[1:]:
+            try:
+                key, value = arg.split("=")
+                value = value.replace("_", " ")
+                value = value.strip("\"")
+                value = self.try_convert(value)
+                kwargs[key] = value
+            except Exception:
+                pass
+
+        "Create the new object"
+        new_instance = HBNBCommand.classes[class_name]()
+
+        """Set all objects attributes to those from command line"""
+        for key, value in kwargs.items():
+            setattr(new_instance, key, value)
+
         storage.save()
         print(new_instance.id)
         storage.save()
