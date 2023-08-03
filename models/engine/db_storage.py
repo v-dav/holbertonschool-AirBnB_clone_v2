@@ -30,27 +30,27 @@ class DBStorage():
 
         if env == "test":
             Base.metadata.drop_all(self.__engine)
-        # Base.metadata.create_all(self.__engine)
+        Base.metadata.create_all(self.__engine)
+        Session = sessionmaker(bind=self.__engine)
+        self.__session = Session()
 
     def all(self, cls=None):
         """Returns a dictionary of all objects in
         the given class or in all classes"""
-        Session = sessionmaker(bind=self.__engine)
-        self.__session = Session()
-
         if cls is not None:
             query = self.__session.query(cls).all()
         else:
-            classes = [User, State, City, Place, Amenity, Review]
             query = []
-            for Class in classes:
-                objects = self.__session.query(Class).all()
-                query.extend(objects)
+            classes = [State, City]
+            for Cls in classes:
+                query.extend(self.__session.query(Cls).all())
 
         objects_dict = {}
         for obj in query:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
             objects_dict[key] = obj
+
+        return objects_dict
 
     def new(self, obj):
         """Adds the object to the current database session"""

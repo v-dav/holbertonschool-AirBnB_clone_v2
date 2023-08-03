@@ -159,7 +159,7 @@ class HBNBCommand(cmd.Cmd):
         for key, value in kwargs.items():
             setattr(new_instance, key, value)
 
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
         storage.save()
 
@@ -239,7 +239,7 @@ class HBNBCommand(cmd.Cmd):
         print_list = []
 
         if isinstance(storage, DBStorage):
-            all_objs = storage.all()
+            all_objs = storage.all().items()
         elif isinstance(storage, FileStorage):
             all_objs = storage._FileStorage__objects.items()
 
