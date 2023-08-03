@@ -10,6 +10,8 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from models.engine.db_storage import DBStorage
+from models.engine.file_storage import FileStorage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -236,16 +238,21 @@ class HBNBCommand(cmd.Cmd):
         """ Shows all objects, or all objects of a class"""
         print_list = []
 
+        if isinstance(storage, DBStorage):
+            all_objs = storage.all()
+        elif isinstance(storage, FileStorage):
+            all_objs = storage._FileStorage__objects.items()
+
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in all_objs:
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in all_objs:
                 print_list.append(str(v))
 
         print(print_list)
@@ -258,7 +265,13 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+
+        if isinstance(storage, DBStorage):
+            all_objs = storage.all()
+        elif isinstance(storage, FileStorage):
+            all_objs = storage._FileStorage__objects.items()
+
+        for k, v in all_objs:
             if args == k.split('.')[0]:
                 count += 1
         print(count)
