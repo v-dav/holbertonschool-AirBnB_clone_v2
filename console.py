@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import os
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -126,40 +127,35 @@ class HBNBCommand(cmd.Cmd):
             except ValueError:
                 return value
 
+    def create_with_db(args):
+        new_dict = {}
+        split_arg = args.split(" ")
+        if len(split_arg) >= 2:
+            for word in split_arg[1:]:
+                Value = word.split("=")[1].strip('"')
+                Key = word.split("=")[0]
+                if "_" in Value:
+                    Value = Value.replace("_", " ")
+                new_dict[Key] = Value
+
+            new_instance = HBNBCommand.classes[split_arg[0]](**new_dict)
+            print(new_instance.id)
+            storage.new(new_instance)
+            storage.save()
+
     def do_create(self, args):
         """ Create an object of any class"""
+        if os.environ.get("HBNB_TYPE_STORAGE") == "db":
+            HBNBCommand.create_with_db(args)
+            return
         if not args:
             print("** class name missing **")
             return
-
-        """Split the argument string in a list"""
-        arguments = args.split()
-        class_name = arguments[0]
-
-        if class_name not in HBNBCommand.classes:
+        elif args not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-
-        """Create dictionary of formatted parameters"""
-        kwargs = {}
-        for arg in arguments[1:]:
-            try:
-                key, value = arg.split("=")
-                value = value.replace("_", " ")
-                value = value.strip("\"")
-                value = self.try_convert(value)
-                kwargs[key] = value
-            except Exception:
-                pass
-
-        "Create the new object"
-        new_instance = HBNBCommand.classes[class_name]()
-
-        """Set all objects attributes to those from command line"""
-        for key, value in kwargs.items():
-            setattr(new_instance, key, value)
-
-        new_instance.save()
+        new_instance = HBNBCommand.classes[args]()
+        storage.new(new_instance)
         print(new_instance.id)
         storage.save()
 
