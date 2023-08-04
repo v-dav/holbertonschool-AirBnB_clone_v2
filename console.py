@@ -127,34 +127,27 @@ class HBNBCommand(cmd.Cmd):
             except ValueError:
                 return value
 
-    def create_with_db(args):
-        new_dict = {}
-        split_arg = args.split(" ")
-        if len(split_arg) >= 2:
-            for word in split_arg[1:]:
-                Value = word.split("=")[1].strip('"')
-                Key = word.split("=")[0]
-                if "_" in Value:
-                    Value = Value.replace("_", " ")
-                new_dict[Key] = Value
-
-            new_instance = HBNBCommand.classes[split_arg[0]](**new_dict)
-            print(new_instance.id)
-            storage.new(new_instance)
-            storage.save()
-
     def do_create(self, args):
         """ Create an object of any class"""
-        if os.environ.get("HBNB_TYPE_STORAGE") == "db":
-            HBNBCommand.create_with_db(args)
-            return
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        elif args.split(" ")[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+
+        params = {}
+        cmd = args.split(" ")
+        if len(cmd) >= 2:
+            for word in cmd[1:]:
+                key = word.split("=")[0]
+                value = word.split("=")[1].strip('"')
+                if "_" in value:
+                    value = value.replace("_", " ")
+                params[key] = value
+
+        new_instance = HBNBCommand.classes[cmd[0]](**params)
         storage.new(new_instance)
         print(new_instance.id)
         storage.save()
