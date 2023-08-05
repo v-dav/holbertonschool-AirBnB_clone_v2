@@ -32,8 +32,7 @@ class BaseModel:
                                        strptime(kwargs['updated_at'],
                                                 '%Y-%m-%dT%H:%M:%S.%f')
                 kwargs['created_at'] = datetime.\
-                                       strptime(kwargs['created_at'],
-                                                '%Y-%m-%dT%H:%M:%S.%f')
+                    strptime(kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
                 del kwargs['__class__']
             except KeyError:
                 self.id = str(uuid.uuid4())
