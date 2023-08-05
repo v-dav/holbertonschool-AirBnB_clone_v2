@@ -8,6 +8,12 @@ import unittest
 class test_Place(test_basemodel):
     """ """
 
+    def __init__(self, *args, **kwargs):
+        """ """
+        super().__init__(*args, **kwargs)
+        self.name = "Place"
+        self.value = Place
+
     @classmethod
     def setUpClass(cls):
         """set up for test"""

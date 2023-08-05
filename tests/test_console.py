@@ -37,6 +37,7 @@ class TestConsole(unittest.TestCase):
             console = self.create()
             console.onecmd("EOF")
             self.assertEqual(mock_stdout.getvalue(), None)
+    """
 
     def test_create_normal(self):
         """ test the create command """
@@ -45,7 +46,6 @@ class TestConsole(unittest.TestCase):
             console = self.create()
             console.onecmd("create City")
             self.assertEqual(type(mock_stdout.getvalue()), str)
-    """
 
     def test_show(self):
         """ test the show command """

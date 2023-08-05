@@ -47,7 +47,6 @@ class test_basemodel(unittest.TestCase):
         with self.assertRaises(TypeError):
             new = BaseModel(**copy)
 
-    """
     def test_save(self):
         """ Testing save """
         i = self.value()
@@ -56,7 +55,6 @@ class test_basemodel(unittest.TestCase):
         with open('file.json', 'r') as f:
             j = json.load(f)
             self.assertEqual(j[key], i.to_dict())
-    """        
 
     def test_str(self):
         """ """
@@ -70,13 +68,17 @@ class test_basemodel(unittest.TestCase):
         n = i.to_dict()
         self.assertEqual(i.to_dict(), n)
 
-    """
+    def test_kwargs_none(self):
+        """ """
+        n = {None: None}
+        with self.assertRaises(TypeError):
+            new = self.value(**n)
+
     def test_kwargs_one(self):
         """ """
         n = {'Name': 'test'}
         with self.assertRaises(KeyError):
             new = self.value(**n)
-    """
 
     def test_id(self):
         """ """
