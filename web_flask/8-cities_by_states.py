@@ -6,13 +6,13 @@ from models.state import State
 from models.city import City
 
 app = Flask(__name__)
-list_states = storage.all(State)
-list_cities = storage.all(City)
 
 
 @app.route('/cities_by_states', strict_slashes=False)
 def cities_by_states():
     """Get cities by states"""
+    list_states = storage.all(State)
+    list_cities = storage.all(City)
     return render_template('8-cities_by_states.html', cities=list_cities,
                            states=list_states)
 
