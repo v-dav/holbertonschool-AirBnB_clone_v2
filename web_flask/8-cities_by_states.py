@@ -18,8 +18,8 @@ def cities_by_states():
 
 
 @app.teardown_appcontext
-def teardown(err):
-    """remove the current session"""
+def remove_sqlsession(exception=None):
+    """A method that removes SQL Session"""
     storage.close()
 
 
