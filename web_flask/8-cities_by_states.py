@@ -6,25 +6,18 @@ from models import storage
 from models.engine.db_storage import DBStorage
 from models.engine.file_storage import FileStorage
 from models.state import State
+from models.city import City
 
 app = Flask(__name__)
 states = storage.all(State)
-states_cities_map = {}
-
-for state in states.values():
-    if isinstance(storage, DBStorage):
-        state_cities = State.cities.__get__(state, State)
-    elif isinstance(storage, FileStorage):
-        state_cities = state.cities()
-
-    states_cities_map[state] = state_cities
+cities = storage.all(City)
 
 
 @app.route("/cities_by_states", strict_slashes=False)
 def display_states():
     """Displays states"""
     return render_template("8-cities_by_states.html",
-                           st=states, st_ct_map=states_cities_map)
+                           st=states, cities=cities)
 
 
 @app.teardown_appcontext

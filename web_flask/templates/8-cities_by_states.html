@@ -6,10 +6,10 @@
 	<BODY>
 		<H1>States</H1>
 		<UL>
-			{% for value in st.values()|sort(attribute='name') %}
-				<LI>{{ value["id"] }}: <B>{{ value["name"] }}</B>
+			{% for state in st.values()|sort(attribute='name') %}
+				<LI>{{ state.id }}: <B>{{ state.name }}</B>
 					<UL>
-						{% for city in st_ct_map[value]|sort(attribute='name') %}
+						{% for city in state.cities|sort(attribute='name') %}
 							<LI>{{ city.id }}: <B>{{ city.name }}</B></LI>
 						{% endfor %}
 					</UL>
