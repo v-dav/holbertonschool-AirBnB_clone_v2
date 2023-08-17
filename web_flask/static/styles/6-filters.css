@@ -40,6 +40,13 @@
 
 	border: 1px solid #DDDDDD;
 	border-radius: 4px;
+
+	overflow: scroll;
+	max-height: 300px;
+}
+
+.popover::-webkit-scrollbar {
+	display: none;
 }
 
 .locations:hover .popover {
